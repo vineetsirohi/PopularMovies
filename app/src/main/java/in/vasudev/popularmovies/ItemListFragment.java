@@ -2,34 +2,31 @@ package in.vasudev.popularmovies;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
-import in.vasudev.popularmovies.dummy.DummyContent;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
-/**
- * A list fragment representing a list of Items. This fragment
- * also supports tablet devices by allowing list items to be given an
- * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link ItemDetailFragment}.
- * <p/>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
- */
-public class ItemListFragment extends ListFragment {
+import java.util.List;
 
-    /**
-     * The serialization (saved instance state) Bundle key representing the
-     * activated item position. Only used on tablets.
-     */
+import in.vasudev.popularmovies.model.MovieInfo;
+import in.vasudev.popularmovies.model.MovieList;
+import in.vasudev.popularmovies.model.TheMovieDbUtils;
+import in.vasudev.popularmovies.volley.GsonRequest;
+import in.vasudev.popularmovies.volley.VolleySingleton;
+
+public class ItemListFragment extends Fragment {
+
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
-    /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
-     */
     private Callbacks mCallbacks = sDummyCallbacks;
 
     /**
@@ -59,6 +56,10 @@ public class ItemListFragment extends ListFragment {
         }
     };
 
+    private RecyclerView mRecyclerView;
+
+    private List<MovieInfo> mMovieInfos;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -70,12 +71,26 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                DummyContent.ITEMS));
+//        // TODO: replace with a real list adapter.
+//        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
+//                getActivity(),
+//                android.R.layout.simple_list_item_activated_1,
+//                android.R.id.text1,
+//                DummyContent.ITEMS));
+//
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
+        mRecyclerView.setHasFixedSize(true);
+
+        final int columnCount = getResources().getInteger(R.integer.column_count);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), columnCount);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        return mRecyclerView;
     }
 
     @Override
@@ -87,6 +102,37 @@ public class ItemListFragment extends ListFragment {
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
+
+        //        Request movie list
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(new GsonRequest<MovieList>(
+                TheMovieDbUtils.moviesListUrl()
+                , MovieList.class
+                , null
+                , new Response.Listener<MovieList>() {
+            @Override
+            public void onResponse(MovieList response) {
+                mMovieInfos = response.getMovieInfos();
+
+                mRecyclerView.setAdapter(new MoviesListAdapter(getActivity(),
+                        mMovieInfos,
+                        new View.OnClickListener() { /* onItemClickListener */
+                            @Override
+                            public void onClick(View v) {
+                                int position = mRecyclerView.getChildAdapterPosition(v);
+
+                                mCallbacks.onItemSelected(mMovieInfos.get(position).getId());
+
+                            }
+                        }));
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("PopMovies", "ItemListFragment.onErrorResponse - error: " + error.toString());
+
+            }
+        }));
     }
 
     @Override
@@ -110,15 +156,6 @@ public class ItemListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mActivatedPosition != ListView.INVALID_POSITION) {
@@ -134,17 +171,18 @@ public class ItemListFragment extends ListFragment {
     public void setActivateOnItemClick(boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
         // give items the 'activated' state when touched.
-        getListView().setChoiceMode(activateOnItemClick
-                ? ListView.CHOICE_MODE_SINGLE
-                : ListView.CHOICE_MODE_NONE);
+
+//        mRecyclerView.setChoiceMode(activateOnItemClick
+//                ? ListView.CHOICE_MODE_SINGLE
+//                : ListView.CHOICE_MODE_NONE);
     }
 
     private void setActivatedPosition(int position) {
-        if (position == ListView.INVALID_POSITION) {
-            getListView().setItemChecked(mActivatedPosition, false);
-        } else {
-            getListView().setItemChecked(position, true);
-        }
+//        if (position == ListView.INVALID_POSITION) {
+//            getListView().setItemChecked(mActivatedPosition, false);
+//        } else {
+//            getListView().setItemChecked(position, true);
+//        }
 
         mActivatedPosition = position;
     }
