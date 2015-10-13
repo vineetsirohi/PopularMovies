@@ -9,6 +9,8 @@ public class TheMovieDbUtils {
     private static final String MOVIE_DETAIL_URL = "http://api.themoviedb.org/3/movie/";
     private static final String MOVIE_DETAIL_URL_API_KEY = "?api_key=";
 
+    public static final String MOVIE_IMAGE_PATH_URL = "http://image.tmdb.org/t/p/w185/";
+
     public static String moviesListUrl() {
         return new StringBuilder().append(MOVIE_LIST_URL).append(TheMovieDbApiKey.API_KEY).toString();
     }

@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import in.vasudev.popularmovies.model.MovieInfo;
+import in.vasudev.popularmovies.model.TheMovieDbUtils;
+import in.vasudev.popularmovies.utils.PicassoUtils;
 
 /**
  * Created by vineet on 11/09/2015.
@@ -45,15 +47,15 @@ public class MoviesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        MyViewHolder holder = (MyViewHolder) viewHolder;
+        final MyViewHolder holder = (MyViewHolder) viewHolder;
 
-        MovieInfo movieInfo = movieInfos.get(position);
+        final MovieInfo movieInfo = movieInfos.get(position);
 
         Picasso.with(mContext)
-                .load("http://image.tmdb.org/t/p/w185/" + movieInfo.getPosterPath())
-                .fit()
-                .centerInside()
+                .load(TheMovieDbUtils.MOVIE_IMAGE_PATH_URL + movieInfo.getPosterPath())
+                .transform(PicassoUtils.getFitWidthTransformation(holder.imageView.getWidth()))
                 .into(holder.imageView);
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -72,5 +74,7 @@ public class MoviesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
     }
+
+
 
 }
