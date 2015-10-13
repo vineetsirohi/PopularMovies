@@ -104,7 +104,7 @@ public class ItemListFragment extends Fragment {
         }
 
         //        Request movie list
-        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(new GsonRequest<MovieList>(
+        GsonRequest<MovieList> movieListGsonRequest = new GsonRequest<>(
                 TheMovieDbUtils.moviesListUrl()
                 , MovieList.class
                 , null
@@ -132,7 +132,14 @@ public class ItemListFragment extends Fragment {
                 Log.d("PopMovies", "ItemListFragment.onErrorResponse - error: " + error.toString());
 
             }
-        }));
+        });
+
+//        movieListGsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+//                5000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieListGsonRequest);
     }
 
     @Override
