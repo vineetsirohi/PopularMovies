@@ -17,8 +17,8 @@ import com.android.volley.VolleyError;
 
 import java.util.List;
 
-import in.vasudev.popularmovies.model.MovieInfo;
-import in.vasudev.popularmovies.model.MovieList;
+import in.vasudev.popularmovies.model.movie_list.MovieInfo;
+import in.vasudev.popularmovies.model.movie_list.MovieList;
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
@@ -133,11 +133,6 @@ public class ItemListFragment extends Fragment {
 
             }
         });
-
-//        movieListGsonRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                5000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieListGsonRequest);
     }

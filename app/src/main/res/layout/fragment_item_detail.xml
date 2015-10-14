@@ -1,5 +1,54 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/item_detail"
-    style="?android:attr/textAppearanceLarge" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="16dp" android:textIsSelectable="true"
-    tools:context=".ItemDetailFragment" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textIsSelectable="true"
+    tools:context=".ItemDetailFragment">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        tools:src="@raw/image_placeholder"/>
+
+    <TextView
+        android:id="@+id/textViewReleaseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_alignTop="@id/imageView"
+        style="@style/TextAppearance.AppCompat.Headline"
+        tools:text="2015"/>
+
+    <TextView
+        android:id="@+id/textViewRuntime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_below="@id/textViewReleaseDate"
+        android:layout_marginTop="8dp"
+        style="@style/TextAppearance.AppCompat.Medium"
+        tools:text="120min"/>
+
+    <TextView
+        android:id="@+id/textViewVoteAverage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_below="@id/textViewRuntime"
+        android:layout_marginTop="8dp"
+        style="@style/TextAppearance.AppCompat.Caption"
+        tools:text="8.1/10"/>
+
+    <Button
+        android:id="@+id/buttonFavourite"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageView"
+        android:layout_below="@id/textViewVoteAverage"
+        android:layout_marginTop="8dp"
+        android:text="@string/mark_as_favourite"/>
+</RelativeLayout>

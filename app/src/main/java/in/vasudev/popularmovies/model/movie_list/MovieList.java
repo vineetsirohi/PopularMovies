@@ -1,4 +1,4 @@
-package in.vasudev.popularmovies.model;
+package in.vasudev.popularmovies.model.movie_list;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

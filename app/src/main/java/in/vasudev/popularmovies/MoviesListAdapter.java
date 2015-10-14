@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import in.vasudev.popularmovies.model.MovieInfo;
+import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.utils.PicassoUtils;
 

@@ -19,7 +19,7 @@ public class TheMovieDbUtils {
         return new StringBuilder().append(MOVIE_DETAIL_URL)
                 .append(movieId)
                 .append(MOVIE_DETAIL_URL_API_KEY)
-                .append(TheMovieDbUtils.MOVIE_DETAIL_URL_API_KEY)
+                .append(TheMovieDbApiKey.API_KEY)
                 .toString();
     }
 }
