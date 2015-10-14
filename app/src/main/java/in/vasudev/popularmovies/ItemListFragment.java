@@ -149,7 +149,7 @@ public class ItemListFragment extends Fragment {
         mCallbacks = (Callbacks) activity;
     }
 
-    
+
 
     @Override
     public void onDetach() {

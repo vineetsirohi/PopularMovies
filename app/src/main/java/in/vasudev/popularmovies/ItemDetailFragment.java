@@ -35,6 +35,8 @@ public class ItemDetailFragment extends Fragment {
     private ImageView imageView;
     private Button buttonMarkFavourite;
 
+    private TextView plotSynopsis;
+
     private ProgressBar progressBar;
 
     /**
@@ -65,6 +67,8 @@ public class ItemDetailFragment extends Fragment {
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
         buttonMarkFavourite = (Button) rootView.findViewById(R.id.buttonFavourite);
 
+        plotSynopsis = (TextView) rootView.findViewById(R.id.textViewPlot);
+
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         return rootView;
     }
@@ -91,6 +95,8 @@ public class ItemDetailFragment extends Fragment {
                 releaseDate.setText(movieDetail.getReleaseDate());
                 runtime.setText(movieDetail.getRuntime());
                 voteAverage.setText(movieDetail.getVoteAverage());
+
+                plotSynopsis.setText(movieDetail.getOverview());
 
                 buttonMarkFavourite.setVisibility(View.VISIBLE);
 

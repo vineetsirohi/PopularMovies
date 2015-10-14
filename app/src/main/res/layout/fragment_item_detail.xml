@@ -53,6 +53,15 @@
         android:visibility="invisible"
         tools:visibility="visible"/>
 
+    <TextView
+        android:id="@+id/textViewPlot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.AppCompat.Medium"
+        tools:text="You will notice that the API response provides a relative path to a movie poster image when you request the metadata for a specific movie."/>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
