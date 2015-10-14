@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -33,6 +34,8 @@ public class ItemDetailFragment extends Fragment {
 
     private ImageView imageView;
     private Button buttonMarkFavourite;
+
+    private ProgressBar progressBar;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,6 +65,7 @@ public class ItemDetailFragment extends Fragment {
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
         buttonMarkFavourite = (Button) rootView.findViewById(R.id.buttonFavourite);
 
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         return rootView;
     }
 
@@ -88,10 +92,14 @@ public class ItemDetailFragment extends Fragment {
                 runtime.setText(movieDetail.getRuntime());
                 voteAverage.setText(movieDetail.getVoteAverage());
 
+                buttonMarkFavourite.setVisibility(View.VISIBLE);
+
+                Picasso.with(getActivity()).cancelRequest(imageView);
                 Picasso.with(getActivity())
                         .load(TheMovieDbUtils.MOVIE_IMAGE_PATH_URL + movieDetail.getPosterPath())
-                        .placeholder(R.raw.image_placeholder)
                         .into(imageView);
+
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }
                 , new Response.ErrorListener() {

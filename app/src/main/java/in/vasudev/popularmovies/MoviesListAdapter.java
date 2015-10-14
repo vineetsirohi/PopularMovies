@@ -1,21 +1,18 @@
 package in.vasudev.popularmovies;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
-import in.vasudev.popularmovies.utils.PicassoUtils;
+import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 
 /**
  * Created by vineet on 11/09/2015.
@@ -53,26 +50,9 @@ public class MoviesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         final MovieInfo movieInfo = movieInfos.get(position);
 
-        holder.imageView.getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    // Wait until layout to call Picasso
-                    @Override
-                    public void onGlobalLayout() {
-                        // Ensure we call this only once
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            holder.imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        } else {
-                            holder.imageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        }
-
-                        Picasso.with(mContext)
-                                .load(TheMovieDbUtils.MOVIE_IMAGE_PATH_URL + movieInfo.getPosterPath())
-                                .placeholder(R.raw.image_placeholder)
-                                .transform(PicassoUtils.getFitWidthTransformation(holder.imageView.getWidth()))
-                                .into(holder.imageView);
-                    }
-                });
-
+        Picasso.with(mContext)
+                .load(TheMovieDbUtils.MOVIE_IMAGE_PATH_URL + movieInfo.getPosterPath())
+                .into(holder.imageView);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -11,8 +11,7 @@
         android:layout_height="200dp"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        tools:src="@raw/image_placeholder"/>
+        android:layout_marginRight="16dp"/>
 
     <TextView
         android:id="@+id/textViewReleaseDate"
@@ -50,5 +49,13 @@
         android:layout_toRightOf="@id/imageView"
         android:layout_below="@id/textViewVoteAverage"
         android:layout_marginTop="8dp"
-        android:text="@string/mark_as_favourite"/>
+        android:text="@string/mark_as_favourite"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
