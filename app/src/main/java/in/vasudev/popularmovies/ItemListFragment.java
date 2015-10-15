@@ -12,14 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.List;
 
+import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 import in.vasudev.popularmovies.model.movie_list.MovieList;
-import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
 
@@ -71,13 +73,6 @@ public class ItemListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        // TODO: replace with a real list adapter.
-//        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
-//                getActivity(),
-//                android.R.layout.simple_list_item_activated_1,
-//                android.R.id.text1,
-//                DummyContent.ITEMS));
-//
     }
 
     @Nullable
@@ -104,8 +99,56 @@ public class ItemListFragment extends Fragment {
         }
 
         //        Request movie list
+        int sortOrder = TheMovieDbUtils.SORT_ORDER_MOST_POPULAR;
+        requestMovieListFromApi(sortOrder);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mActivatedPosition != ListView.INVALID_POSITION) {
+            // Serialize and persist the activated item position.
+            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+        }
+    }
+
+    public void sortMovies(int sortOrder) {
+        requestMovieListFromApi(sortOrder);
+    }
+
+    private void requestMovieListFromApi(int sortOrder) {
+//        cancel all pending requests
+        VolleySingleton.getInstance(getActivity().getApplication()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
+
+//        prepare request
         GsonRequest<MovieList> movieListGsonRequest = new GsonRequest<>(
-                TheMovieDbUtils.moviesListUrl()
+                TheMovieDbUtils.moviesListUrl(sortOrder)
                 , MovieList.class
                 , null
                 , new Response.Listener<MovieList>() {
@@ -134,38 +177,8 @@ public class ItemListFragment extends Fragment {
             }
         });
 
+//        add request to volley queue
         VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieListGsonRequest);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-
-        mCallbacks = (Callbacks) activity;
-    }
-
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mActivatedPosition != ListView.INVALID_POSITION) {
-            // Serialize and persist the activated item position.
-            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
-        }
     }
 
     /**
