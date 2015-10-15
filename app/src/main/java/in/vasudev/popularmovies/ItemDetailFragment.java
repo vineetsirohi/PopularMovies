@@ -92,9 +92,9 @@ public class ItemDetailFragment extends Fragment {
                     appBarLayout.setTitle(movieDetail.getTitle());
                 }
 
-                releaseDate.setText(movieDetail.getReleaseDate());
-                runtime.setText(movieDetail.getRuntime());
-                voteAverage.setText(movieDetail.getVoteAverage());
+                releaseDate.setText(movieDetail.getReleaseDate().substring(0, 4));
+                runtime.setText(movieDetail.getRuntime() + getString(R.string.min));
+                voteAverage.setText(movieDetail.getVoteAverage() + "/10");
 
                 plotSynopsis.setText(movieDetail.getOverview());
 

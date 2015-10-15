@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
         android:layout_alignTop="@id/imageView"
-        style="@style/TextAppearance.AppCompat.Headline"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp"
         tools:text="2015"/>
 
     <TextView
@@ -29,7 +30,9 @@
         android:layout_toRightOf="@id/imageView"
         android:layout_below="@id/textViewReleaseDate"
         android:layout_marginTop="8dp"
-        style="@style/TextAppearance.AppCompat.Medium"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:textStyle="italic"
+        android:textSize="21sp"
         tools:text="120min"/>
 
     <TextView
@@ -39,7 +42,8 @@
         android:layout_toRightOf="@id/imageView"
         android:layout_below="@id/textViewRuntime"
         android:layout_marginTop="8dp"
-        style="@style/TextAppearance.AppCompat.Caption"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="16sp"
         tools:text="8.1/10"/>
 
     <Button
