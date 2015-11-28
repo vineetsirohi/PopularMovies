@@ -1,5 +1,7 @@
 package in.vasudev.popularmovies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -7,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -144,7 +147,15 @@ public class ItemDetailFragment extends Fragment {
             public void onResponse(MovieTrailers response) {
                 movieTrailers = response;
 
-                listViewTrailers.setAdapter(new ArrayAdapter<Trailer>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, movieTrailers.getTrailers()));
+                listViewTrailers.setAdapter(new ArrayAdapter<Trailer>(getActivity(), R.layout.layout_trailers, R.id.text1, movieTrailers.getTrailers()));
+//                play youtube trailer on item click
+                listViewTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Uri youtubeLink = Uri.parse("http://www.youtube.com/watch?v=" + ((Trailer) adapterView.getAdapter().getItem(i)).getKey());
+                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeLink));
+                    }
+                });
 
             }
         }
