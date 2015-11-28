@@ -164,7 +164,6 @@ public class ItemListFragment extends Fragment {
                                 int position = mRecyclerView.getChildAdapterPosition(v);
 
                                 mCallbacks.onItemSelected(mMovieInfos.get(position).getId());
-
                             }
                         }));
             }

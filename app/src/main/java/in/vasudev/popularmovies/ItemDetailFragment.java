@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +20,10 @@ import com.squareup.picasso.Picasso;
 
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.model.movie_detail.MovieDetail;
+import in.vasudev.popularmovies.model.movie_reviews.MovieReviews;
+import in.vasudev.popularmovies.model.movie_reviews.Review;
+import in.vasudev.popularmovies.model.movie_trailers.MovieTrailers;
+import in.vasudev.popularmovies.model.movie_trailers.Trailer;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
 
@@ -27,6 +33,8 @@ public class ItemDetailFragment extends Fragment {
 
     private String movieId;
     private MovieDetail movieDetail;
+    private MovieTrailers movieTrailers;
+    private MovieReviews movieReviews;
 
     private TextView releaseDate;
     private TextView runtime;
@@ -36,6 +44,10 @@ public class ItemDetailFragment extends Fragment {
     private Button buttonMarkFavourite;
 
     private TextView plotSynopsis;
+
+    private ListView listViewTrailers;
+
+    private ListView listViewReviews;
 
     private ProgressBar progressBar;
 
@@ -69,6 +81,9 @@ public class ItemDetailFragment extends Fragment {
 
         plotSynopsis = (TextView) rootView.findViewById(R.id.textViewPlot);
 
+        listViewTrailers = (ListView) rootView.findViewById(R.id.listViewTrailers);
+        listViewReviews = (ListView) rootView.findViewById(R.id.listViewReviews);
+
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         return rootView;
     }
@@ -78,7 +93,7 @@ public class ItemDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //        Request movie list
-        GsonRequest<MovieDetail> movieListGsonRequest = new GsonRequest<>(
+        GsonRequest<MovieDetail> movieDetailGsonRequest = new GsonRequest<>(
                 TheMovieDbUtils.movieDetailUrl(movieId)
                 , MovieDetail.class
                 , null
@@ -116,7 +131,54 @@ public class ItemDetailFragment extends Fragment {
             }
         });
 
-        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieListGsonRequest);
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieDetailGsonRequest);
 
+
+//        request videos
+        GsonRequest<MovieTrailers> movieVideosGsonRequest = new GsonRequest<>(
+                TheMovieDbUtils.movieDetailsVideos(movieId)
+                , MovieTrailers.class
+                , null
+                , new Response.Listener<MovieTrailers>() {
+            @Override
+            public void onResponse(MovieTrailers response) {
+                movieTrailers = response;
+
+                listViewTrailers.setAdapter(new ArrayAdapter<Trailer>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, movieTrailers.getTrailers()));
+
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("PopMovies", "ItemDetailFragment.onErrorResponse - error: " + error.toString());
+
+            }
+        });
+
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieVideosGsonRequest);
+
+//        request reviews
+        GsonRequest<MovieReviews> movieRequestGsonRequest = new GsonRequest<>(
+                TheMovieDbUtils.movieDetailsVideos(movieId)
+                , MovieReviews.class
+                , null
+                , new Response.Listener<MovieReviews>() {
+            @Override
+            public void onResponse(MovieReviews response) {
+                movieReviews = response;
+
+                listViewReviews.setAdapter(new ArrayAdapter<Review>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, movieReviews.getReviews()));
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("PopMovies", "ItemDetailFragment.onErrorResponse - error: " + error.toString());
+
+            }
+        });
+
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieRequestGsonRequest);
     }
 }

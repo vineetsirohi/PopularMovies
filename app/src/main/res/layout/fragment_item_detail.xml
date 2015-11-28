@@ -66,6 +66,56 @@
         style="@style/TextAppearance.AppCompat.Medium"
         tools:text="You will notice that the API response provides a relative path to a movie poster image when you request the metadata for a specific movie."/>
 
+    <View
+        android:id="@+id/viewLIne"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textViewPlot"
+        android:layout_margin="16dp"
+        android:background="#333333"
+        />
+
+    <TextView
+        android:id="@+id/textViewTrailers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewLIne"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:text="Trailers:"/>
+
+    <ListView android:id="@+id/listViewTrailers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTrailers"
+        android:layout_margin="16dp"
+        />
+
+    <View
+        android:id="@+id/viewLIne2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/listViewTrailers"
+        android:layout_margin="16dp"
+        android:background="#333333"
+        />
+
+    <TextView
+        android:id="@+id/textViewReviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewLIne2"
+        android:layout_margin="16dp"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:text="Reviews:"/>
+
+    <ListView android:id="@+id/listViewReviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewReviews"
+        android:layout_margin="16dp"
+        />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
