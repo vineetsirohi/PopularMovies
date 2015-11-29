@@ -27,6 +27,7 @@ import in.vasudev.popularmovies.model.movie_reviews.MovieReviews;
 import in.vasudev.popularmovies.model.movie_reviews.Review;
 import in.vasudev.popularmovies.model.movie_trailers.MovieTrailers;
 import in.vasudev.popularmovies.model.movie_trailers.Trailer;
+import in.vasudev.popularmovies.provider.FavouritesUtils;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
 
@@ -81,6 +82,22 @@ public class ItemDetailFragment extends Fragment {
 
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
         buttonMarkFavourite = (Button) rootView.findViewById(R.id.buttonFavourite);
+        if (!FavouritesUtils.isNotMarkedAsFavourite(getActivity(), movieId)) {
+            buttonMarkFavourite.setText(R.string.favourite);
+        }
+        buttonMarkFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (FavouritesUtils.isNotMarkedAsFavourite(getActivity(), movieId)) {
+                    FavouritesUtils.addToFavourites(getActivity(), movieDetail);
+                    buttonMarkFavourite.setText(R.string.favourite);
+                } else {
+                    FavouritesUtils.removeFromFavourites(getActivity(), ItemDetailFragment.this.movieId);
+                    buttonMarkFavourite.setText(R.string.mark_as_favourite);
+                }
+            }
+        });
 
         plotSynopsis = (TextView) rootView.findViewById(R.id.textViewPlot);
 
@@ -90,6 +107,7 @@ public class ItemDetailFragment extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

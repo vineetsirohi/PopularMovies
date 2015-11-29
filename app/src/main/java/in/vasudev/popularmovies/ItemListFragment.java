@@ -2,7 +2,6 @@ package in.vasudev.popularmovies;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,10 +28,11 @@ import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 import in.vasudev.popularmovies.model.movie_list.MovieList;
 import in.vasudev.popularmovies.provider.FavouritesProvider;
+import in.vasudev.popularmovies.provider.FavouritesUtils;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
 
-public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private static final int FAVOURITES = 2;
@@ -222,8 +222,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri = Uri.parse("content://" + getString(R.string.authority) + "/favouritemovies");
-        return new CursorLoader(getActivity(), uri, null, null, null, null);
+        return new CursorLoader(getActivity(), FavouritesUtils.getFavouritesUri(getActivity()), null, null, null, null);
     }
 
     @Override

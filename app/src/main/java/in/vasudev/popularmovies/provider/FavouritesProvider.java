@@ -1,5 +1,8 @@
 package in.vasudev.popularmovies.provider;
 
+import android.content.Context;
+import android.net.Uri;
+
 import de.triplet.simpleprovider.AbstractProvider;
 import de.triplet.simpleprovider.Column;
 import de.triplet.simpleprovider.Table;
@@ -27,4 +30,6 @@ public class FavouritesProvider extends AbstractProvider {
         public static final String KEY_IMAGE_URL = "image_url";
 
     }
+
+
 }
