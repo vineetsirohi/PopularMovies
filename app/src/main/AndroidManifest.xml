@@ -30,6 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ItemListActivity" />
         </activity>
+
+        <provider
+            android:authorities="@string/authority"
+            android:name="in.vasudev.popularmovies.provider.FavouritesProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

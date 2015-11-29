@@ -4,5 +4,7 @@
     <string name="mark_as_favourite">Mark as favourite</string>
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest Rated</string>
+    <string name="favourites">Favourites</string>
     <string name="min">min</string>
+    <string name="authority">in.vasudev.popularmovies.FAVOURITES</string>
 </resources>

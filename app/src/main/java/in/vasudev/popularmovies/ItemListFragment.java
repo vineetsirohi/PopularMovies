@@ -1,9 +1,14 @@
 package in.vasudev.popularmovies;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,17 +22,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.model.movie_list.MovieInfo;
 import in.vasudev.popularmovies.model.movie_list.MovieList;
+import in.vasudev.popularmovies.provider.FavouritesProvider;
 import in.vasudev.popularmovies.volley.GsonRequest;
 import in.vasudev.popularmovies.volley.VolleySingleton;
 
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final int FAVOURITES = 2;
 
     private Callbacks mCallbacks = sDummyCallbacks;
 
@@ -134,7 +142,16 @@ public class ItemListFragment extends Fragment {
     }
 
     public void sortMovies(int sortOrder) {
-        requestMovieListFromApi(sortOrder);
+        if (sortOrder == FAVOURITES) {
+            showFavourites();
+        } else {
+            requestMovieListFromApi(sortOrder);
+        }
+    }
+
+    private void showFavourites() {
+//        Toast.makeText(getActivity(), "Favourites selected", Toast.LENGTH_LONG).show();
+        getLoaderManager().initLoader(0, null, this);
     }
 
     private void requestMovieListFromApi(int sortOrder) {
@@ -201,5 +218,47 @@ public class ItemListFragment extends Fragment {
 //        }
 
         mActivatedPosition = position;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = Uri.parse("content://" + getString(R.string.authority) + "/favouritemovies");
+        return new CursorLoader(getActivity(), uri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+//        DatabaseUtils.dumpCursor(cursor);
+        mMovieInfos = new ArrayList<>();
+        if (cursor != null) {
+            // move cursor to first row
+            if (cursor.moveToFirst()) {
+                do {
+                    MovieInfo movieInfo = new MovieInfo();
+                    movieInfo.setId(cursor.getString(cursor.getColumnIndex(FavouritesProvider.FavouriteMovie.KEY_ID)));
+                    movieInfo.setTitle(cursor.getString(cursor.getColumnIndex(FavouritesProvider.FavouriteMovie.KEY_TITLE)));
+                    movieInfo.setPosterPath(cursor.getString(cursor.getColumnIndex(FavouritesProvider.FavouriteMovie.KEY_IMAGE_URL)));
+                    mMovieInfos.add(movieInfo);
+                    // move to next row
+                } while (cursor.moveToNext());
+//                cursor.close();
+            }
+        }
+
+        mRecyclerView.setAdapter(new MoviesListAdapter(getActivity(),
+                mMovieInfos,
+                new View.OnClickListener() { /* onItemClickListener */
+                    @Override
+                    public void onClick(View v) {
+                        int position = mRecyclerView.getChildAdapterPosition(v);
+
+                        mCallbacks.onItemSelected(mMovieInfos.get(position).getId());
+                    }
+                }));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
