@@ -8,4 +8,5 @@
     <string name="min">min</string>
     <string name="authority">in.vasudev.popularmovies.FAVOURITES</string>
     <string name="favourite">Favourite</string>
+    <string name="share">Share</string>
 </resources>

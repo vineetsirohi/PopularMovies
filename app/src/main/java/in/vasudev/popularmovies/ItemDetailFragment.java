@@ -7,11 +7,13 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.squareup.picasso.Picasso;
 
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
@@ -34,6 +37,7 @@ import in.vasudev.popularmovies.volley.VolleySingleton;
 public class ItemDetailFragment extends Fragment {
 
     public static final String ARG_ITEM_ID = "item_id";
+    private static final String YOUTUBE_LINK_PREFIX = "http://www.youtube.com/watch?v=";
 
     private String movieId;
     private MovieDetail movieDetail;
@@ -45,7 +49,7 @@ public class ItemDetailFragment extends Fragment {
     private TextView voteAverage;
 
     private ImageView imageView;
-    private Button buttonMarkFavourite;
+    private MaterialFavoriteButton buttonMarkFavourite;
 
     private TextView plotSynopsis;
 
@@ -54,6 +58,9 @@ public class ItemDetailFragment extends Fragment {
     private ListView listViewReviews;
 
     private ProgressBar progressBar;
+
+    private MenuItem shareMenuItem;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,6 +76,8 @@ public class ItemDetailFragment extends Fragment {
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             movieId = getArguments().getString(ARG_ITEM_ID);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -81,20 +90,17 @@ public class ItemDetailFragment extends Fragment {
         voteAverage = (TextView) rootView.findViewById(R.id.textViewVoteAverage);
 
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
-        buttonMarkFavourite = (Button) rootView.findViewById(R.id.buttonFavourite);
+        buttonMarkFavourite = (MaterialFavoriteButton) rootView.findViewById(R.id.buttonFavourite);
         if (!FavouritesUtils.isNotMarkedAsFavourite(getActivity(), movieId)) {
-            buttonMarkFavourite.setText(R.string.favourite);
+            buttonMarkFavourite.setFavorite(true);
         }
-        buttonMarkFavourite.setOnClickListener(new View.OnClickListener() {
+        buttonMarkFavourite.setOnFavoriteChangeListener(new MaterialFavoriteButton.OnFavoriteChangeListener() {
             @Override
-            public void onClick(View view) {
-
-                if (FavouritesUtils.isNotMarkedAsFavourite(getActivity(), movieId)) {
+            public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
+                if (favorite) {
                     FavouritesUtils.addToFavourites(getActivity(), movieDetail);
-                    buttonMarkFavourite.setText(R.string.favourite);
                 } else {
                     FavouritesUtils.removeFromFavourites(getActivity(), ItemDetailFragment.this.movieId);
-                    buttonMarkFavourite.setText(R.string.mark_as_favourite);
                 }
             }
         });
@@ -165,16 +171,20 @@ public class ItemDetailFragment extends Fragment {
             public void onResponse(MovieTrailers response) {
                 movieTrailers = response;
 
-                listViewTrailers.setAdapter(new ArrayAdapter<Trailer>(getActivity(), R.layout.layout_trailers, R.id.text1, movieTrailers.getTrailers()));
-//                play youtube trailer on item click
-                listViewTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Uri youtubeLink = Uri.parse("http://www.youtube.com/watch?v=" + ((Trailer) adapterView.getAdapter().getItem(i)).getKey());
-                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeLink));
-                    }
-                });
 
+                if (movieTrailers.getTrailers() != null && movieTrailers.getTrailers().size() > 0) {
+                    listViewTrailers.setAdapter(new ArrayAdapter<Trailer>(getActivity(), R.layout.layout_trailers, R.id.text1, movieTrailers.getTrailers()));
+//                play youtube trailer on item click
+                    listViewTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Uri youtubeLink = Uri.parse(YOUTUBE_LINK_PREFIX + ((Trailer) adapterView.getAdapter().getItem(i)).getKey());
+                            startActivity(new Intent(Intent.ACTION_VIEW, youtubeLink));
+                        }
+                    });
+
+                    shareMenuItem.setVisible(true);
+                }
             }
         }
                 , new Response.ErrorListener() {
@@ -209,5 +219,29 @@ public class ItemDetailFragment extends Fragment {
         });
 
         VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieRequestGsonRequest);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_details, menu);
+        shareMenuItem = menu.findItem(R.id.share_item);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.share_item) {
+            String textToShare = new StringBuilder()
+                    .append("Hey! Enjoy the trailer of ").append(movieDetail.getTitle())
+                    .append("\n\n").append(YOUTUBE_LINK_PREFIX).append(movieTrailers.getTrailers().get(0).getKey()).toString();
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

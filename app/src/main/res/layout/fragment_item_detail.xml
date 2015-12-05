@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,63 +10,71 @@
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="200dp"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/textViewReleaseDate"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
         android:layout_alignTop="@id/imageView"
-        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_toRightOf="@id/imageView"
         android:textSize="24sp"
-        tools:text="2015"/>
+        tools:text="2015" />
 
     <TextView
         android:id="@+id/textViewRuntime"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
         android:layout_below="@id/textViewReleaseDate"
         android:layout_marginTop="8dp"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="italic"
+        android:layout_toRightOf="@id/imageView"
         android:textSize="21sp"
-        tools:text="120min"/>
+        android:textStyle="italic"
+        tools:text="120min" />
 
     <TextView
         android:id="@+id/textViewVoteAverage"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageView"
         android:layout_below="@id/textViewRuntime"
         android:layout_marginTop="8dp"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="16sp"
-        tools:text="8.1/10"/>
-
-    <Button
-        android:id="@+id/buttonFavourite"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageView"
+        android:textSize="16sp"
+        tools:text="8.1/10" />
+
+    <com.github.ivbaranov.mfb.MaterialFavoriteButton
+        android:id="@+id/buttonFavourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textViewVoteAverage"
         android:layout_marginTop="8dp"
-        android:text="@string/mark_as_favourite"
+        android:layout_toRightOf="@id/imageView"
         android:visibility="invisible"
-        tools:visibility="visible"/>
+        app:mfb_animate_favorite="true"
+        app:mfb_animate_unfavorite="true"
+        app:mfb_bounce_duration="300"
+        app:mfb_color="black"
+        app:mfb_rotation_angle="360"
+        app:mfb_rotation_duration="400"
+        app:mfb_type="star"
+        tools:visibility="visible" />
+    <!--app:mfb_favorite_image="@drawable/ic_fav"-->
+    <!--app:mfb_not_favorite_image="@drawable/ic_not_fav"-->
 
     <TextView
         android:id="@+id/textViewPlot"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView"
         android:layout_margin="16dp"
-        style="@style/TextAppearance.AppCompat.Medium"
         android:textSize="15sp"
-        tools:text="You will notice that the API response provides a relative path to a movie poster image when you request the metadata for a specific movie."/>
+        tools:text="You will notice that the API response provides a relative path to a movie poster image when you request the metadata for a specific movie." />
 
     <View
         android:id="@+id/viewLIne"
@@ -73,25 +82,24 @@
         android:layout_height="1dp"
         android:layout_below="@id/textViewPlot"
         android:layout_margin="8dp"
-        android:background="#333333"
-        />
+        android:background="#333333" />
 
     <TextView
         android:id="@+id/textViewTrailers"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/viewLIne"
         android:layout_margin="16dp"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:textSize="16sp"
-        android:text="Trailers:"/>
+        android:text="Trailers:"
+        android:textSize="16sp" />
 
-    <ListView android:id="@+id/listViewTrailers"
+    <ListView
+        android:id="@+id/listViewTrailers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewTrailers"
-        android:layout_margin="16dp"
-        />
+        android:layout_margin="16dp" />
 
     <View
         android:id="@+id/viewLIne2"
@@ -99,29 +107,28 @@
         android:layout_height="1dp"
         android:layout_below="@id/listViewTrailers"
         android:layout_margin="8dp"
-        android:background="#333333"
-        />
+        android:background="#333333" />
 
     <TextView
         android:id="@+id/textViewReviews"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/viewLIne2"
         android:layout_margin="16dp"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:textSize="16sp"
-        android:text="Reviews:"/>
+        android:text="Reviews:"
+        android:textSize="16sp" />
 
-    <ListView android:id="@+id/listViewReviews"
+    <ListView
+        android:id="@+id/listViewReviews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewReviews"
-        android:layout_margin="16dp"
-        />
+        android:layout_margin="16dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
