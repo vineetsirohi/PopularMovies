@@ -24,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import in.vasudev.popularmovies.model.TheMovieDbUtils;
 import in.vasudev.popularmovies.model.movie_detail.MovieDetail;
 import in.vasudev.popularmovies.model.movie_reviews.MovieReviews;
@@ -44,20 +46,32 @@ public class ItemDetailFragment extends Fragment {
     private MovieTrailers movieTrailers;
     private MovieReviews movieReviews;
 
-    private TextView releaseDate;
-    private TextView runtime;
-    private TextView voteAverage;
+    @Bind(R.id.textViewReleaseDate)
+    TextView releaseDate;
 
-    private ImageView imageView;
-    private MaterialFavoriteButton buttonMarkFavourite;
+    @Bind(R.id.textViewRuntime)
+    TextView runtime;
 
-    private TextView plotSynopsis;
+    @Bind(R.id.textViewVoteAverage)
+    TextView voteAverage;
 
-    private ListView listViewTrailers;
+    @Bind(R.id.imageView)
+    ImageView imageView;
 
-    private ListView listViewReviews;
+    @Bind(R.id.buttonFavourite)
+    MaterialFavoriteButton buttonMarkFavourite;
 
-    private ProgressBar progressBar;
+    @Bind(R.id.textViewPlot)
+    TextView plotSynopsis;
+
+    @Bind(R.id.listViewTrailers)
+    ListView listViewTrailers;
+
+    @Bind(R.id.listViewReviews)
+    ListView listViewReviews;
+
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     private MenuItem shareMenuItem;
 
@@ -84,13 +98,8 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
+        ButterKnife.bind(this, rootView);
 
-        releaseDate = (TextView) rootView.findViewById(R.id.textViewReleaseDate);
-        runtime = (TextView) rootView.findViewById(R.id.textViewRuntime);
-        voteAverage = (TextView) rootView.findViewById(R.id.textViewVoteAverage);
-
-        imageView = (ImageView) rootView.findViewById(R.id.imageView);
-        buttonMarkFavourite = (MaterialFavoriteButton) rootView.findViewById(R.id.buttonFavourite);
         if (!FavouritesUtils.isNotMarkedAsFavourite(getActivity(), movieId)) {
             buttonMarkFavourite.setFavorite(true);
         }
@@ -105,12 +114,7 @@ public class ItemDetailFragment extends Fragment {
             }
         });
 
-        plotSynopsis = (TextView) rootView.findViewById(R.id.textViewPlot);
 
-        listViewTrailers = (ListView) rootView.findViewById(R.id.listViewTrailers);
-        listViewReviews = (ListView) rootView.findViewById(R.id.listViewReviews);
-
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         return rootView;
     }
 
@@ -219,6 +223,11 @@ public class ItemDetailFragment extends Fragment {
         });
 
         VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieRequestGsonRequest);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
