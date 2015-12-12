@@ -1,5 +1,10 @@
 package in.vasudev.popularmovies;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,11 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +35,7 @@ import in.vasudev.popularmovies.volley.VolleySingleton;
 public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final String STATE_SORT_ORDER = "sort_order";
     private static final int FAVOURITES = 2;
 
     private Callbacks mCallbacks = sDummyCallbacks;
@@ -54,6 +55,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
          * Callback for when an item has been selected.
          */
         public void onItemSelected(String id);
+
     }
 
     /**
@@ -64,6 +66,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         @Override
         public void onItemSelected(String id) {
         }
+
     };
 
     private RecyclerView mRecyclerView;
@@ -100,14 +103,15 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        int sortOrder = TheMovieDbUtils.SORT_ORDER_MOST_POPULAR;
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+            sortOrder = savedInstanceState.getInt(STATE_SORT_ORDER, TheMovieDbUtils.SORT_ORDER_MOST_POPULAR);
         }
 
         //        Request movie list
-        int sortOrder = TheMovieDbUtils.SORT_ORDER_MOST_POPULAR;
         requestMovieListFromApi(sortOrder);
     }
 
@@ -194,7 +198,8 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
 //        add request to volley queue
-        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(movieListGsonRequest);
+        VolleySingleton.getInstance(getActivity().getApplication()).addToRequestQueue(
+                movieListGsonRequest);
     }
 
     /**
@@ -202,8 +207,8 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
      * given the 'activated' state when touched.
      */
     public void setActivateOnItemClick(boolean activateOnItemClick) {
-        // When setting CHOICE_MODE_SINGLE, ListView will automatically
-        // give items the 'activated' state when touched.
+//         When setting CHOICE_MODE_SINGLE, ListView will automatically
+//         give items the 'activated' state when touched.
 
 //        mRecyclerView.setChoiceMode(activateOnItemClick
 //                ? ListView.CHOICE_MODE_SINGLE
@@ -212,9 +217,9 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void setActivatedPosition(int position) {
 //        if (position == ListView.INVALID_POSITION) {
-//            getListView().setItemChecked(mActivatedPosition, false);
+//            mRecyclerView.setItemChecked(mActivatedPosition, false);
 //        } else {
-//            getListView().setItemChecked(position, true);
+//            mRecyclerView.setItemChecked(position, true);
 //        }
 
         mActivatedPosition = position;

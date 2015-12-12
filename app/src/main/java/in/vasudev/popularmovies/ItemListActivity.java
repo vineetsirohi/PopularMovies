@@ -9,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import in.vasudev.popularmovies.model.TheMovieDbUtils;
+
 
 /**
  * An activity representing a list of Items. This activity
@@ -28,12 +30,16 @@ import android.widget.Spinner;
  */
 public class ItemListActivity extends AppCompatActivity implements ItemListFragment.Callbacks {
 
+    private static final String STATE_MOVIES_SPINNER = "movies_spinner";
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
     private ItemListFragment articleFrag;
+
+    private Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +67,11 @@ public class ItemListActivity extends AppCompatActivity implements ItemListFragm
 
 
 //        Sort order
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        mSpinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(), R.array.sort_order_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinner.setAdapter(adapter);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 if (articleFrag != null) {
@@ -78,6 +84,16 @@ public class ItemListActivity extends AppCompatActivity implements ItemListFragm
 
             }
         });
+
+        if (savedInstanceState != null) {
+            mSpinner.setSelection(savedInstanceState.getInt(STATE_MOVIES_SPINNER, TheMovieDbUtils.SORT_ORDER_MOST_POPULAR));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_MOVIES_SPINNER, mSpinner.getSelectedItemPosition());
     }
 
     /**
